@@ -16,8 +16,6 @@ def cb(data):
 
 def main():
     tornado.options.parse_command_line()
-    if options.logfile:
-        logging.basicConfig(filename=options.logfile, level=logging.DEBUG)
 
     if sys.argv[1] == 'server':
         server = Server()
