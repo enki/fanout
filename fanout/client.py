@@ -50,6 +50,6 @@ class FanoutClient(object):
             self.stream.write( unicode(len(data)) + u'\n' + data )
             self.stream._handle_write()
         except:
-            logging.log('WRITING TO QUEUE FAILED')
+            logging.warn('WRITING TO QUEUE FAILED')
 
 Client = FanoutClient
