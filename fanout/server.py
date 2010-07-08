@@ -23,9 +23,9 @@ class FanoutServer(object):
         logging.info('client left')
         self.clients.remove(client)
 
-    def send_to_all_but(self, data, but=None):
+    def send_to_all_but(self, data, but=()):
         for client in self.clients:
-            if client and client != but:
+            if client and client not in but:
                 client.send_to_client(data)
             client.stream._handle_write()
 
