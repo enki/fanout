@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import site, os, sys; site.addsitedir(".")
 import re, os, sys
 import logging
 
