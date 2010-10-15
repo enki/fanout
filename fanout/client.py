@@ -51,5 +51,7 @@ class FanoutClient(object):
             self.stream._handle_write()
         except:
             logging.warn('WRITING TO QUEUE FAILED')
+            import traceback
+            traceback.print_exc()
 
 Client = FanoutClient
