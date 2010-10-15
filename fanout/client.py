@@ -45,7 +45,7 @@ class FanoutClient(object):
         self.wait_for_line()
 
     def yell(self, data):
-        # print 'READY TO WRITE', unicode(len(data)) + u'\n' + data
+        print 'READY TO WRITE', unicode(len(data)) + u'\n' + data
         try:
             self.stream.write( unicode(len(data)) + u'\n' + data )
             self.stream._handle_write()
