@@ -49,6 +49,16 @@ class FanoutClient(object):
         try:
             self.stream.write( unicode(len(data)) + u'\n' + data )
             self.stream._handle_write()
+        except IOError:
+            logging.warn('IO PROBLEM, WRITING TO QUEUE FAILED, RESETTING')
+            import traceback
+            traceback.print_exc()
+            
+            try:
+                self.stream.close()
+            except:
+                pass
+            self.stream.connect()
         except:
             logging.warn('WRITING TO QUEUE FAILED')
             import traceback
