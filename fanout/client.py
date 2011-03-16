@@ -58,7 +58,7 @@ class FanoutClient(object):
                 self.stream.close()
             except:
                 pass
-            self.stream.connect()
+            self.stream.connect(self.host, self.port)
         except:
             logging.warn('WRITING TO QUEUE FAILED')
             import traceback
