@@ -32,6 +32,9 @@ class FanoutClient(object):
         self.stream.read_until('\n', self.line_received)
 
     def line_received(self, line):
+        ioloop.IOLoop.instance().add_callback( functools.partial(self.handle_line, line) )
+        
+    def handle_line(self, line):
         line = line.strip()
         if line:
             amount = int(line)
@@ -58,7 +61,7 @@ class FanoutClient(object):
                 self.stream.close()
             except:
                 pass
-            self.stream.connect(self.host, self.port)
+            self.connect(self.host, self.port)
         except:
             logging.warn('WRITING TO QUEUE FAILED')
             import traceback
