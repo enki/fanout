@@ -16,11 +16,11 @@ class FanoutServer(object):
         p = FanoutProtocol(stream=iostream.IOStream(conn), server=self)
 
     def register(self, client):
-        logging.info('client connected')
+        logging.info('new fanout client connection')
         self.clients.add(client)
     
     def unregister(self, client):
-        logging.info('client left')
+        logging.info('fanout client left')
         self.clients.remove(client)
 
     def send_to_all_but(self, data, but=()):
@@ -69,7 +69,7 @@ class FanoutProtocol(object):
             self.wait_for_line()
     
     def data_received(self, data):
-        print 'data received', data
+        # print 'data received', data
         if data:
             self.server.send_to_all(data)
         self.wait_for_line()
