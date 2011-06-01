@@ -6,6 +6,7 @@ import time
 
 from tornado import iostream
 from tornado import ioloop
+from tornado.util import bytes_type, b
 import functools
 import time
 
@@ -50,7 +51,8 @@ class FanoutClient(object):
     def yell(self, data):
         # print 'READY TO WRITE', unicode(len(data)) + u'\n' + data
         try:
-            self.stream.write( unicode(len(data)) + u'\n' + data )
+            msg = (unicode(len(data)) + u'\n' + data ).encode('utf-8')
+            self.stream.write( msg )
             self.stream._handle_write()
         except IOError:
             logging.warn('IO PROBLEM, WRITING TO QUEUE FAILED, RESETTING')

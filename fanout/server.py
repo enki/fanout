@@ -75,6 +75,7 @@ class FanoutProtocol(object):
         self.wait_for_line()
 
     def send_to_client(self, data):
-        self.stream.write(unicode(len(data) + 1) + u'\n' + data + '\n')
+        msg = ( unicode(len(data) + 1) + u'\n' + data + '\n' ).encode('utf-8')
+        self.stream.write( msg )
 
 Server = FanoutServer
