@@ -2,7 +2,7 @@
 import re, os, sys
 import socket
 import logging
-import time
+import time,traceback
 
 from tornado import iostream
 from tornado import ioloop
@@ -25,9 +25,12 @@ class FanoutServer(object):
 
     def send_to_all_but(self, data, but=()):
         for client in list(self.clients):
-            if client and client not in but:
-                client.send_to_client(data)
-            client.stream._handle_write()
+            try:
+                if client and client not in but:
+                    client.send_to_client(data)
+                client.stream._handle_write()
+            except:
+                traceback.print_exc()
 
     def send_to_all(self, data):
         self.send_to_all_but(data=data)
@@ -61,7 +64,7 @@ class FanoutProtocol(object):
         self.stream.read_until('\n', self.line_received)
 
     def line_received(self, line):
-        line = line.strip()
+        line = line.decode('utf-8').strip()
         if line:
             amount = int(line)
             self.stream.read_bytes(amount, self.data_received)

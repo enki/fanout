@@ -3,6 +3,7 @@ import re, os, sys
 import socket
 import logging
 import time
+import traceback
 
 from tornado import iostream
 from tornado import ioloop
@@ -45,7 +46,10 @@ class FanoutClient(object):
 
     def data_received(self, data):
         if data:
-            self.callback(data.strip())
+            try:
+                self.callback( data.decode('utf-8').strip() )
+            except:
+                traceback.print_exc()
         self.wait_for_line()
 
     def yell(self, data):
@@ -56,7 +60,6 @@ class FanoutClient(object):
             self.stream._handle_write()
         except IOError:
             logging.warn('IO PROBLEM, WRITING TO QUEUE FAILED, RESETTING')
-            import traceback
             traceback.print_exc()
             
             try:
@@ -66,7 +69,6 @@ class FanoutClient(object):
             self.connect(self.host, self.port)
         except:
             logging.warn('WRITING TO QUEUE FAILED')
-            import traceback
             traceback.print_exc()
 
 Client = FanoutClient
