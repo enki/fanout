@@ -21,7 +21,8 @@ class FanoutServer(object):
     
     def unregister(self, client):
         logging.info('fanout client left')
-        self.clients.remove(client)
+        if client in self.clients:
+            self.clients.remove(client)
 
     def send_to_all_but(self, data, but=()):
         for client in list(self.clients):
@@ -30,7 +31,9 @@ class FanoutServer(object):
                     client.send_to_client(data)
                 client.stream._handle_write()
             except:
-                traceback.print_exc()
+                if client in self.clients:
+                    self.clients.remove(client)
+                # traceback.print_exc()
 
     def send_to_all(self, data):
         self.send_to_all_but(data=data)
@@ -66,13 +69,16 @@ class FanoutProtocol(object):
     def line_received(self, line):
         line = line.decode('utf-8').strip()
         if line:
+            if line == 'BYE':
+                self.stream.close()
+                return
             amount = int(line)
             self.stream.read_bytes(amount, self.data_received)
         else:
             self.wait_for_line()
     
     def data_received(self, data):
-        # print 'data received', data
+        print 'data received', data
         if data:
             self.server.send_to_all(data)
         self.wait_for_line()
